@@ -1,9 +1,10 @@
 import { join } from 'path'
-import { Readable, pipeline as pipelineCallback } from 'stream'
+import { pipeline as pipelineCallback, Readable } from 'stream'
 import { promisify } from 'util'
+
 import { STORAGE_PROVIDERS } from '../../../env'
-import { createS3, type S3Options } from './s3'
 import { createLocal, LocalOptions } from './local'
+import { createS3, type S3Options } from './s3'
 
 const pipeline = promisify(pipelineCallback)
 const TURBO_CACHE_FOLDER_NAME = 'turborepocache' as const
@@ -38,6 +39,7 @@ export function createLocation(provider: STORAGE_PROVIDERS, providerOptions: Pro
   return {
     getCachedArtifact,
     createCachedArtifact,
+    location,
   }
 }
 
