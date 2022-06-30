@@ -1,6 +1,7 @@
 import Ajv from 'ajv'
 import envSchema from 'env-schema'
-import { Type, Static } from '@sinclair/typebox'
+
+import { Static, Type } from '@sinclair/typebox'
 
 enum NODE_ENVS {
   PRODUCTION = 'production',
