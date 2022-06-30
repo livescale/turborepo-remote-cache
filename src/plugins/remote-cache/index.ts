@@ -1,8 +1,10 @@
 import { FastifyInstance } from 'fastify'
+
 import { badRequest, unauthorized } from '@hapi/boom'
-import { getArtifact, putArtifact } from './routes'
-import { createLocation } from './storage'
+
 import { STORAGE_PROVIDERS } from '../../env'
+import { getArtifact, health, postArtifact, putArtifact } from './routes'
+import { createLocation } from './storage'
 
 async function turboRemoteCache(
   instance: FastifyInstance,
@@ -32,9 +34,10 @@ async function turboRemoteCache(
       return payload
     },
   )
-
   const tokens = new Set<string>(allowedTokens)
   instance.addHook('onRequest', async function (request) {
+    if (request.url.includes('health')) return
+
     let authHeader = request.headers['authorization']
     authHeader = Array.isArray(authHeader) ? authHeader.join() : authHeader
 
@@ -59,6 +62,8 @@ async function turboRemoteCache(
     async function (i) {
       i.route(getArtifact)
       i.route(putArtifact)
+      i.route(postArtifact)
+      i.route(health)
     },
     { prefix: `/${apiVersion}` },
   )
